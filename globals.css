@@ -1,0 +1,246 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+@layer base {
+  :root {
+    --bg-main: #0a0c12;
+    --bg-card: rgba(16, 19, 28, 0.65);
+    --text-main: #f5f5f4;
+    --text-muted: #a8a29e;
+    --border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .dark {
+    --bg-main: #0a0c12;
+    --bg-card: rgba(16, 19, 28, 0.65);
+    --text-main: #f5f5f4;
+    --text-muted: #a8a29e;
+    --border-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
+body {
+  background-color: #07090f;
+  background-image: 
+    /* Radial Vignette: keeps center dark behind cards, edges slightly more defined */
+    radial-gradient(ellipse 75% 70% at 50% 35%, rgba(10, 12, 20, 0.85) 0%, rgba(5, 7, 11, 0.98) 100%),
+    /* Faint Cybernetic Scanning Grid Lines */
+    linear-gradient(to right, rgba(6, 182, 212, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(6, 182, 212, 0.04) 1px, transparent 1px);
+  background-size: 100% 100%, 48px 48px, 48px 48px;
+  background-position: center center, center center, center center;
+  background-attachment: fixed;
+  color: #f5f5f4;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* ─── Viewport Corner Glow Bleed (Advanced AI Lab Feel) ───────────────── */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 0% 0%, rgba(6, 182, 212, 0.15) 0%, transparent 45%),
+    radial-gradient(circle at 100% 0%, rgba(139, 92, 246, 0.15) 0%, transparent 45%),
+    radial-gradient(circle at 0% 100%, rgba(139, 92, 246, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 100% 100%, rgba(6, 182, 212, 0.12) 0%, transparent 45%);
+  pointer-events: none;
+  z-index: -2;
+}
+
+/* ─── Soft Ambient Particle Drift Animation (Low CPU Cost) ───────────── */
+@keyframes ambient-pulse {
+  0% {
+    transform: scale(1) translateY(0px);
+    opacity: 0.12;
+  }
+  50% {
+    transform: scale(1.04) translateY(-10px);
+    opacity: 0.20;
+  }
+  100% {
+    transform: scale(1) translateY(0px);
+    opacity: 0.12;
+  }
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: -10%;
+  background: 
+    radial-gradient(circle at 35% 30%, rgba(6, 182, 212, 0.16) 0%, transparent 35%),
+    radial-gradient(circle at 65% 70%, rgba(139, 92, 246, 0.16) 0%, transparent 35%);
+  pointer-events: none;
+  z-index: -1;
+  animation: ambient-pulse 12s ease-in-out infinite alternate;
+}
+
+/* ─── Premium Subtle Scrollbar ────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* ─── Translucent Material Surfaces (Revealing Background Elements) ───── */
+.surface-card {
+  background: rgba(14, 17, 26, 0.68);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.45);
+}
+
+.surface-card-hover {
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+.surface-card-hover:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(18, 22, 33, 0.78);
+}
+
+.surface-subtle {
+  background: rgba(20, 24, 35, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ─── Editorial Score Gauge ──────────────────────────────────────────── */
+@keyframes score-ring-fill {
+  from { --score-draw: 0; }
+  to   { --score-draw: var(--score-progress); }
+}
+
+@property --score-draw {
+  syntax: "<number>";
+  initial-value: 0;
+  inherits: false;
+}
+
+.score-ring {
+  position: relative;
+  width: 136px;
+  height: 136px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: conic-gradient(
+    var(--ring-color) calc(var(--score-draw) * 1%),
+    rgba(255, 255, 255, 0.08) 0%
+  );
+  animation: score-ring-fill 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.score-ring-inner {
+  width: 112px;
+  height: 112px;
+  border-radius: 9999px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(12, 14, 21, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ─── Drawer & Overlays ───────────────────────────────────────────────── */
+@keyframes drawer-slide-in {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+.drawer-panel {
+  animation: drawer-slide-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes drawer-overlay-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.drawer-overlay {
+  animation: drawer-overlay-in 0.2s ease forwards;
+}
+
+/* ─── Full-Viewport Result Overlay Reveal ─────────────────────────────── */
+@keyframes overlay-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.overlay-reveal {
+  animation: overlay-reveal 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ─── Subtle Section Reveal ───────────────────────────────────────────── */
+@keyframes section-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.section-fade-up {
+  animation: section-fade-up 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-fill-mode: both;
+}
+
+/* ─── Interactive Sentence Highlighting ───────────────────────────────── */
+.sentence-highlight {
+  transition: background-color 0.15s ease;
+  border-radius: 0.3rem;
+  padding: 0.12rem 0.3rem;
+  margin: 0 0.04rem;
+  cursor: pointer;
+  display: inline;
+}
+
+.sentence-highlight:hover {
+  filter: brightness(1.2);
+}
+
+.sentence-selected {
+  outline: 2px solid #e7e5e4;
+  outline-offset: 1px;
+}
